@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+MOD_FRAME_INTERVAL = 5.0  # check 1 frame every 5 seconds
+
 hive_headers = {
     "Authorization": f"Token {os.getenv('HIVE_API_KEY')}",
     "accept": "application/json",
@@ -50,7 +52,7 @@ class ModeratorAgent:
     async def process_track(self, track: rtc.VideoTrack):
         video_stream = rtc.VideoStream(track)
         last_processed_time = 0
-        frame_interval = 5.0  # 1 frame every 5 seconds
+        frame_interval = MOD_FRAME_INTERVAL
         async for frame in video_stream:
             current_time = time.time()
             if (current_time - last_processed_time) >= frame_interval:
