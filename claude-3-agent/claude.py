@@ -25,7 +25,8 @@ ClaudeMessageRole = Enum("MessageRole", ["system", "user", "assistant", "functio
 
 class ClaudeModels(Enum):
     Claude3Opus = "claude-3-opus-20240229"
-    GPT3Turbo = "gpt-3.5-turbo-0125"
+    Claude3Sonnet = "claude-3-sonnet-20240229"
+    Claude3Haiku = "claude-3-haiku-20240307"
 
 
 @dataclass
