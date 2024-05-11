@@ -21,6 +21,7 @@ CHATGPT_MODEL = "gpt-4-1106-preview"
 
 async def entrypoint(job: JobContext):
     tasks = []
+    chat = rtc.ChatManager(job.room)
     chatgpt_plugin = ChatGPTPlugin(prompt="", message_capacity=20, model=CHATGPT_MODEL)
 
     async def process_chatgpt_result(text_stream):
@@ -34,15 +35,14 @@ async def entrypoint(job: JobContext):
                 message.message = message.message + text
                 await chat.update_message(message)
 
-    def on_chat_received(message: rtc.ChatMessage):
+    def on_message_received(message: rtc.ChatMessage):
         if message.deleted:
             return
         msg = ChatGPTMessage(role=ChatGPTMessageRole.user, content=message.message)
         chatgpt_result = chatgpt_plugin.add_message(msg)
         tasks.append(asyncio.create_task(process_chatgpt_result(chatgpt_result)))
 
-    chat = rtc.ChatManager(job.room)
-    chat.on("message_received", on_chat_received)
+    chat.on("message_received", on_message_received)
 
 
 async def request_fnc(req: JobRequest) -> None:
